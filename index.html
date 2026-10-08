@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fall of the Suns</title>
+<meta name="description" content="Fall of the Suns — jogo de cartas tático de fantasia. Seis facções, tabuleiro 3×3 e partidas online com os amigos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Alegreya+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fundo: #0f1311; --painel: #18201b; --borda: #34433a; --texto: #e8e2d0; --suave: #a9b7ae;
+    --ouro: #e7c55a; --ouro-escuro: #8a6d1f; --verde: #5ee37a; --vermelho: #ff8a7a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--fundo); color: var(--texto); font: 18px/1.55 "Alegreya Sans", system-ui, sans-serif; }
+  a { color: var(--ouro); }
+  h1, h2, h3 { font-family: "Cinzel", serif; color: var(--ouro); margin: 0 0 .4em; letter-spacing: .02em; }
+  .largura { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+  header { position: sticky; top: 0; z-index: 5; background: rgba(15,19,17,.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--borda); }
+  header .largura { display: flex; align-items: center; gap: 24px; height: 60px; }
+  .logo { font-family: "Cinzel", serif; font-weight: 800; color: var(--ouro); text-decoration: none; font-size: 22px; white-space: nowrap; }
+  nav { display: flex; gap: 18px; flex-wrap: wrap; font-size: 16px; margin-left: auto; }
+  nav a { color: var(--texto); text-decoration: none; }
+  nav a:hover { color: var(--ouro); }
+  .heroi { padding: 72px 0 40px; text-align: center; background:
+           radial-gradient(ellipse at 50% 0%, rgba(231,197,90,.18), transparent 60%), radial-gradient(ellipse at 50% 120%, rgba(160,40,30,.18), transparent 60%); }
+  .heroi h1 { font-size: clamp(38px, 7vw, 72px); line-height: 1.05; }
+  .heroi p { color: var(--suave); max-width: 680px; margin: 12px auto 28px; font-size: 20px; }
+  .botao { display: inline-block; padding: 16px 30px; border-radius: 10px; background: linear-gradient(#f0d16e, #c99a2e); color: #1d1606;
+           font-family: "Cinzel", serif; font-weight: 800; font-size: 20px; text-decoration: none; border: 1px solid #fff3c0; box-shadow: 0 6px 24px rgba(231,197,90,.25); }
+  .botao:hover { filter: brightness(1.07); }
+  .discreto { display: block; margin-top: 12px; color: var(--suave); font-size: 15px; }
+  .status { display: inline-flex; align-items: center; gap: 10px; margin-top: 28px; padding: 8px 16px; border: 1px solid var(--borda); border-radius: 999px; background: var(--painel); font-size: 15px; }
+  .ponto { width: 10px; height: 10px; border-radius: 50%; background: #777; }
+  .ponto.on { background: var(--verde); box-shadow: 0 0 10px var(--verde); } .ponto.off { background: var(--vermelho); }
+  section { padding: 56px 0; border-top: 1px solid var(--borda); }
+  .faccoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-top: 20px; }
+  .faccao { background: var(--painel); border: 1px solid var(--borda); border-radius: 12px; overflow: hidden; text-align: center; }
+  .faccao img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+  .faccao b { display: block; padding: 10px 8px 2px; font-family: "Cinzel", serif; color: var(--ouro); font-size: 15px; }
+  .faccao span { display: block; padding: 0 8px 12px; color: var(--suave); font-size: 14px; }
+  .cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 20px; }
+  .cartao { background: var(--painel); border: 1px solid var(--borda); border-radius: 12px; padding: 22px; }
+  .cartao .botao { font-size: 17px; padding: 12px 20px; }
+  .cartao small { color: var(--suave); display: block; margin-top: 10px; }
+  ol.passos { counter-reset: p; list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 12px; }
+  ol.passos li { counter-increment: p; background: var(--painel); border: 1px solid var(--borda); border-radius: 12px; padding: 14px 18px 14px 64px; position: relative; }
+  ol.passos li::before { content: counter(p); position: absolute; left: 16px; top: 12px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+                         background: var(--ouro); color: #1d1606; font-family: "Cinzel", serif; font-weight: 800; }
+  code { background: #0b0e0c; border: 1px solid var(--borda); border-radius: 6px; padding: 1px 6px; font-size: 15px; }
+  .versao { background: var(--painel); border: 1px solid var(--borda); border-radius: 12px; padding: 16px 20px; margin-top: 14px; }
+  .versao h3 { font-size: 18px; } .versao time { color: var(--suave); font-size: 14px; }
+  footer { border-top: 1px solid var(--borda); padding: 28px 0 40px; color: var(--suave); font-size: 14px; }
+  @media (max-width: 640px) { nav { display: none; } .heroi { padding-top: 48px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="largura">
+    <a class="logo" href="#">☀ Fall of the Suns</a>
+    <nav><a href="#baixar">Baixar</a><a href="#como-jogar">Como jogar</a><a href="#novidades">Novidades</a><a href="#faccoes">Facções</a></nav>
+  </div>
+</header>
+
+<div class="heroi">
+  <div class="largura">
+    <h1>Fall of the Suns</h1>
+    <p>Jogo de cartas tático de fantasia. Seis facções, um tabuleiro 3×3 por jogador, campanha com história e partidas online com os amigos.</p>
+    <a class="botao" id="baixar-principal" href="#baixar">Baixar o jogo</a>
+    <span class="discreto" id="baixar-dica">Grátis · Windows e Linux (Steam Deck)</span>
+    <div class="status"><span class="ponto" id="status-ponto"></span><span id="status-texto">Verificando o servidor...</span></div>
+  </div>
+</div>
+
+<section id="faccoes">
+  <div class="largura">
+    <h2>Seis bandeiras</h2>
+    <p>Cada facção tem o seu jeito de lutar. Monte o deck, posicione as tropas e abra uma Brecha até o Líder inimigo.</p>
+    <div class="faccoes">
+      <div class="faccao"><img src="img/E00.jpg" alt="Capitã Aldren" loading="lazy"><b>Guarda de Elmar</b><span>Muralha e formação</span></div>
+      <div class="faccao"><img src="img/H00.jpg" alt="Gorthak" loading="lazy"><b>Horda de Gorthak</b><span>Força bruta e empurrões</span></div>
+      <div class="faccao"><img src="img/S00.jpg" alt="Aelwyn" loading="lazy"><b>Vigília de Sylvaren</b><span>Arqueiros e puxões</span></div>
+      <div class="faccao"><img src="img/V00.jpg" alt="Zahra" loading="lazy"><b>Clã de Vashkar</b><span>Velocidade e emboscadas</span></div>
+      <div class="faccao"><img src="img/M00.jpg" alt="Ithren" loading="lazy"><b>Círculo de Ithrenn</b><span>Magia e controle</span></div>
+      <div class="faccao"><img src="img/N00.jpg" alt="Vharol" loading="lazy"><b>Legião de Nekhar</b><span>Mortos que voltam</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="baixar">
+  <div class="largura">
+    <h2>Baixar</h2>
+    <p>O jeito recomendado é o <b>atualizador</b>: um programa pequeno que baixa o jogo, mantém sempre atualizado (só baixa o que mudou) e abre o jogo.</p>
+    <div class="cartoes">
+      <div class="cartao">
+        <h3>Windows</h3>
+        <a class="botao" href="https://github.com/projetostargalan-hash/fall-of-the-suns/releases/latest/download/FallOfTheSuns.exe">Baixar atualizador</a>
+        <small>Prefere o jogo inteiro de uma vez? <a href="https://github.com/projetostargalan-hash/fall-of-the-suns/releases/latest/download/FallOfTheSuns-Windows-completo.zip">Pacote completo (.zip, ~360 MB)</a></small>
+      </div>
+      <div class="cartao">
+        <h3>Linux / Steam Deck</h3>
+        <a class="botao" href="https://github.com/projetostargalan-hash/fall-of-the-suns/releases/latest/download/FallOfTheSuns-linux">Baixar atualizador</a>
+        <small>Ou o <a href="https://github.com/projetostargalan-hash/fall-of-the-suns/releases/latest/download/FallOfTheSuns-Linux-completo.tar.gz">pacote completo (.tar.gz, ~350 MB)</a></small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="como-jogar">
+  <div class="largura">
+    <h2>Como começar</h2>
+    <ol class="passos">
+      <li><b>Crie uma pasta só para o jogo</b> (por exemplo, "Fall of the Suns" na Área de Trabalho) e coloque o atualizador nela.</li>
+      <li><b>Abra o atualizador.</b> No Windows, se aparecer "O Windows protegeu o computador", clique em <b>Mais informações → Executar assim mesmo</b> (o jogo ainda não tem assinatura digital paga).
+          No Linux, abra um terminal na pasta e rode <code>chmod +x FallOfTheSuns-linux</code> e depois <code>./FallOfTheSuns-linux</code>.</li>
+      <li><b>Espere o download.</b> Na primeira vez ele baixa o jogo inteiro (~350 MB); depois, só as novidades. Ao terminar, o jogo abre sozinho.</li>
+      <li><b>Faça o Tutorial.</b> São lições curtas que ensinam tudo: Ouro, Marcha, ataque, Brecha, Apoio, defesa e a tropa inicial.</li>
+      <li><b>Jogue online:</b> em <b>Jogar → Jogar online</b>, crie a sua conta (nome e senha) e entre. Desafie amigos, abra pacotes e suba de liga.</li>
+      <li><b>Sempre abra pelo atualizador</b> (crie um atalho dele na Área de Trabalho): assim você está sempre na versão do servidor.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="novidades">
+  <div class="largura">
+    <h2>Novidades</h2>
+    <div id="lista-novidades"><p>Carregando...</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="largura">
+    Fall of the Suns — em acesso antecipado. Sons e músicas: Kenney e artistas do OpenGameArt (licença CC0); fontes Cinzel e Alegreya Sans (OFL).
+  </div>
+</footer>
+
+<script>
+  const REPO = "projetostargalan-hash/fall-of-the-suns";
+
+  // Botão principal: aponta direto para o atualizador do sistema de quem visita.
+  (function () {
+    const ua = navigator.userAgent;
+    const linux = /Linux|X11/.test(ua) && !/Android/.test(ua);
+    const windows = /Windows/.test(ua);
+    const botao = document.getElementById("baixar-principal");
+    const dica = document.getElementById("baixar-dica");
+    if (windows) { botao.href = `https://github.com/${REPO}/releases/latest/download/FallOfTheSuns.exe`; botao.textContent = "Baixar para Windows"; dica.textContent = "Grátis · atualizador de ~12 MB · também para Linux (abaixo)"; }
+    else if (linux) { botao.href = `https://github.com/${REPO}/releases/latest/download/FallOfTheSuns-linux`; botao.textContent = "Baixar para Linux"; dica.textContent = "Grátis · atualizador de ~12 MB · também para Windows (abaixo)"; }
+  })();
+
+  // Status do servidor ao vivo.
+  async function status() {
+    const ponto = document.getElementById("status-ponto"), texto = document.getElementById("status-texto");
+    try {
+      const r = await fetch("https://jogo.fallofthesuns.online/saude", { cache: "no-store" });
+      const s = await r.json();
+      ponto.className = "ponto on";
+      texto.textContent = `Servidor online · ${s.jogadoresOnline} jogando agora · ${s.partidas} partida(s)`;
+    } catch {
+      ponto.className = "ponto off";
+      texto.textContent = "Servidor fora do ar no momento — tente mais tarde";
+    }
+  }
+  status(); setInterval(status, 30000);
+
+  // Novidades: os lançamentos publicados no GitHub.
+  (async function () {
+    const lista = document.getElementById("lista-novidades");
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=8`);
+      const versoes = await r.json();
+      if (!Array.isArray(versoes) || versoes.length === 0) { lista.innerHTML = "<p>A primeira versão sai em breve.</p>"; return; }
+      lista.innerHTML = "";
+      for (const v of versoes) {
+        const div = document.createElement("div");
+        div.className = "versao";
+        const titulo = document.createElement("h3"); titulo.textContent = v.name || v.tag_name;
+        const data = document.createElement("time"); data.textContent = new Date(v.published_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+        const corpo = document.createElement("p"); corpo.textContent = v.body || "";
+        div.append(titulo, data, corpo);
+        lista.append(div);
+      }
+    } catch { lista.innerHTML = "<p>Não deu para carregar as novidades agora.</p>"; }
+  })();
+</script>
+</body>
+</html>
