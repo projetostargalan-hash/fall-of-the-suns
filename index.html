@@ -118,7 +118,7 @@
       <li><b>Espere o download.</b> Na primeira vez ele baixa o jogo inteiro (~350 MB); depois, só as novidades. Ao terminar, o jogo abre sozinho.</li>
       <li><b>Faça o Tutorial.</b> São lições curtas que ensinam tudo: Ouro, Marcha, ataque, Brecha, Apoio, defesa e a tropa inicial.</li>
       <li><b>Jogue online:</b> em <b>Jogar → Jogar online</b>, crie a sua conta (nome e senha) e entre. Desafie amigos, abra pacotes e suba de liga.</li>
-      <li><b>Sempre abra pelo atualizador</b> (crie um atalho dele na Área de Trabalho): assim você está sempre na versão do servidor.</li>
+      <li><b>Abra pelo atalho "Fall of the Suns"</b> que o atualizador cria na Área de Trabalho e no menu Iniciar. Quando sair uma versão nova, o próprio jogo avisa na tela inicial: clique em <b>Atualizar agora</b> e ele fecha, baixa só as novidades e abre de novo.</li>
     </ol>
   </div>
 </section>
@@ -157,7 +157,7 @@
       const r = await fetch("https://jogo.fallofthesuns.online/saude", { cache: "no-store" });
       const s = await r.json();
       ponto.className = "ponto on";
-      texto.textContent = `Servidor online · ${s.jogadoresOnline} jogando agora · ${s.partidas} partida(s)`;
+      texto.textContent = `Servidor online · ${s.jogadoresOnline} jogando agora · ${s.partidas} ${s.partidas === 1 ? "partida" : "partidas"}`;
     } catch {
       ponto.className = "ponto off";
       texto.textContent = "Servidor fora do ar no momento — tente mais tarde";
